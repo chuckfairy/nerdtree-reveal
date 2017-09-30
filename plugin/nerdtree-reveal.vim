@@ -19,7 +19,7 @@ let g:loaded_nerdtree_reveal = 1
 " MacVim already built in
 
 if has("gui_macvim")
-    return
+    finish
 endif
 
 
