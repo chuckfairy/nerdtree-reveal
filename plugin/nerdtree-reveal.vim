@@ -40,30 +40,34 @@ function! g:NERDTreeGetDefaultFileManager()
 
     if exists("g:NERDTreeFileManagerProgram")
         return g:NERDTreeFileManagerProgram
+    endif
 
     if has("unix") && exists("g:NERDTreeFileManagerProgramLinux")
         return g:NERDTreeFileManagerProgramLinux
+    endif
 
     if has("win32") || has("win64") && exists("g:NERDTreeFileManagerProgramMac")
         return g:NERDTreeFileManagerProgramMac
+    endif
 
     if (  has("win32") || has("win64") ) && exists("g:NERDTreeFileManagerProgramWindows")
         return g:NERDTreeFileManagerProgramWindows
+    endif
 
 
     " Mac
-    elseif has("gui_mac") || has("mac")
+    if has("gui_mac") || has("mac")
         return "open"
+    endif
 
     " Windows default explorer
-    elseif has("win32") || has("win64")
+    if has("win32") || has("win64")
         return "explorer.exe"
+    endif
 
     " Assume everything else is linux
-    else
-        return "xdg-open"
 
-    endif
+    return "gio open"
 
 endfunction
 
@@ -74,11 +78,11 @@ function! NERDTreeRevealInFileManager()
     let curNode = g:NERDTreeDirNode.GetSelected()
     let finderProgram = g:NERDTreeGetDefaultFileManager()
 
-    let cmd = finderProgram . ' ' . curNode.path.str( { 'escape': 1 } )
+    let cmd = finderProgram . ' ' . curNode.path.str( { 'escape': 0 } ) . "&"
 
     if cmd != ''
-        let success = system( cmd )
         call NERDTreeRender()
+        let success = system( cmd )
     else
         echo "Aborted"
     endif
